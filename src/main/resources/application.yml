@@ -1,0 +1,14 @@
+spring:
+  datasource:
+      url: jdbc:log4jdbc:mariadb://61.43.57.201:3306/nodehomenft?useUnicode=true&characterEncoding=UTF-8&useSSL=false&amp;serverTimezone=UTC
+      username: kthulu
+      password: kthulu123
+      driver-class-name: org.mariadb.jdbc.Driver
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+
+mybatis:
+  type-aliases-package: co.kr.abc
+  mapper-locations: mapper/*.xml

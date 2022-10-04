@@ -11,7 +11,7 @@
 <h2>Hello!</h2>
 <div>JSP List Test</div>
 <c:forEach var="tokenList" items="${tokenList}" varStatus="idx">
-    ${tokenList.idx} Hello! ${tokenList.name} <br />
+    ${tokenList.token_idx} Hello! ${tokenList.token_name} <br />
 </c:forEach>
 </body>
 </html>

@@ -1,4 +1,4 @@
-package co.kr.abc.kthuluapi;
+package kr.co.abc.kthuluapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

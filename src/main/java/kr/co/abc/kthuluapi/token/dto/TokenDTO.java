@@ -1,4 +1,4 @@
-package co.kr.abc.kthuluapi.token.dto;
+package kr.co.abc.kthuluapi.token.dto;
 
 import org.apache.ibatis.type.Alias;
 

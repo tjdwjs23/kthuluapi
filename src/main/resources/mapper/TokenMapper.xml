@@ -4,6 +4,13 @@
 
 <mapper namespace="kr.co.abc.kthuluapi.token.mapper.TokenMapper">
     <select id="tokenList" resultType="Token">
-        SELECT * from token;
+        SELECT
+            *
+        FROM
+            token
+        WHERE
+            token_name LIKE CONCAT(#{token_name}, '%')
+          AND
+            token_type = #{token_type}
     </select>
 </mapper>

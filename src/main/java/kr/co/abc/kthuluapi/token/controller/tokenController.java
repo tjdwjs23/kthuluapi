@@ -1,10 +1,10 @@
 package kr.co.abc.kthuluapi.token.controller;
 
+import com.google.gson.Gson;
 import kr.co.abc.kthuluapi.token.dto.TokenDTO;
 import kr.co.abc.kthuluapi.token.mapper.TokenMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -20,11 +20,32 @@ public class tokenController {
     @GetMapping("/")
     public ModelAndView index(
             Locale locale
-            , HttpSession session
-            , TokenDTO tokenDTO) {
+            , HttpSession session) {
         ModelAndView mav = new ModelAndView("/index");
-        List<TokenDTO> tokenList = tokenMapper.tokenList(tokenDTO);
-        mav.addObject("tokenList",tokenList);
         return mav;
+    }
+
+    /**
+     * token
+     */
+    @PostMapping("/token/{type}")
+    public String token(
+            Locale locale
+            , HttpSession session
+            , TokenDTO tokenDTO
+            , @PathVariable(name="type") String type
+            , @RequestParam(value="token_name", required=true) String token_name) {
+
+        String strResult = "{ \"result\":\"FAIL\", \"value\":\"[]\" }";
+
+        tokenDTO.setToken_type(type);
+        tokenDTO.setToken_name(token_name);
+        List<TokenDTO> tokenList = tokenMapper.tokenList(tokenDTO);
+
+        // List to JSONArray
+        Gson gson = new Gson();
+        strResult = "{ \"result\":\"OK\", \"value\":"+gson.toJsonTree(tokenList).toString()+" }";
+
+        return strResult;
     }
 }

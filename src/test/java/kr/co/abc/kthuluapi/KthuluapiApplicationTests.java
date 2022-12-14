@@ -8,6 +8,7 @@ class KthuluapiApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }

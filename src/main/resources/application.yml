@@ -1,14 +1,28 @@
 spring:
   datasource:
-      url: jdbc:log4jdbc:mariadb://61.43.57.201:3306/kthulu?useUnicode=true&characterEncoding=UTF-8&useSSL=false&amp;serverTimezone=UTC
-      username: kthulu
-      password: kthulu123
+    hikari:
       driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-  mvc:
-    view:
-      prefix: /WEB-INF/views/
-      suffix: .jsp
+      jdbc-url: jdbc:log4jdbc:mariadb://61.43.57.201:3306/kthulu?useUnicode=true&characterEncoding=UTF-8&useSSL=false&amp;serverTimezone=UTC
+      username: kthulu
+      password:  kthulu123
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      use-new-id-generator-mappings: false
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+logging:
+  level:
+    org.hibernate.SQL: debug
 
-mybatis:
-  type-aliases-package: kr.co.abc.kthuluapi
-  mapper-locations: mapper/*.xml
+

@@ -1,66 +1,44 @@
 package kr.co.abc.kthuluapi.token.model;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import kr.co.abc.kthuluapi.token.dto.TokenResponseDto;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import kr.co.abc.kthuluapi.token.entity.QToken;
 import kr.co.abc.kthuluapi.token.entity.Token;
-import kr.co.abc.kthuluapi.token.entity.TokenRepository;
-import kr.co.abc.kthuluapi.token.entity.TokenSpecification;
-import org.hibernate.annotations.BatchSize;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.QueryHint;
 
 @Service
 @RequiredArgsConstructor
 public class TokenService {
+    private final JPAQueryFactory queryFactory;
 
-    private final TokenRepository tokenRepository;
-
-    /**
-     * 토큰 리스트 조회
-     */
-    @QueryHints(value = @QueryHint(name = "org.hibernate.readOnly", value = "true"))
-    @Transactional(readOnly = true)
-    @BatchSize(size = 10)
-    public List<TokenResponseDto> findAll(String token_type, String token_name) {
-        Specification<Token> spec = (root, query, criteriaBuilder) -> null;
-        if (token_type != null) {
-            spec = spec.and(TokenSpecification.equalTokenType(token_type));
-        }
-
-        if (token_name != null) {
-            spec = spec.and(TokenSpecification.likeTokenName(token_name));
-        }
-        List<Token> list = tokenRepository.findAll(spec);
-        return list.stream().map(TokenResponseDto::new).collect(Collectors.toList());
+    public List<Token> findToken(String token_type, String token_name) {
+        // Q클래스를 이용한다.
+        QToken token = QToken.token;
+        return queryFactory.selectFrom(token)
+            .where(
+                token.token_type.eq(token_type)
+                .andAnyOf(
+                    token.token_name.contains(token_name)
+                    .or(token.token_symbol.contains(token_name))
+                    .or(token.token_contract.contains(token_name))
+                )
+            )
+            .limit(150)
+            .fetch();
     }
 
-    /**
-     * 토큰 리스트 조회
-     */
-    @QueryHints(value = @QueryHint(name = "org.hibernate.readOnly", value = "true"))
-    @Transactional(readOnly = true)
-    @BatchSize(size = 10)
-    public List<TokenResponseDto> findAllContract(String token_type, String token_name) {
-        Specification<Token> spec = (root, query, criteriaBuilder) -> null;
-        if (token_type != null) {
-            spec = spec.and(TokenSpecification.equalTokenType(token_type));
-        }
-
-        if (token_name != null) {
-            spec = spec.and(TokenSpecification.equalTokenSymbol(token_name));
-        }
-
-        List<Token> list = tokenRepository.findAll(spec);
-        return list.stream().map(TokenResponseDto::new).collect(Collectors.toList());
-
+    public List<Token> findTokenContract(String token_type, String token_name) {
+        // Q클래스를 이용한다.
+        QToken token = QToken.token;
+        return queryFactory.selectFrom(token)
+                .where(
+                    token.token_type.eq(token_type)
+                    .and(token.token_symbol.eq(token_name))
+                )
+                .fetch();
     }
-
 
 }

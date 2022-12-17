@@ -1,8 +1,15 @@
+buildscript { // querydsl
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.7.4'
     id 'io.spring.dependency-management' version '1.0.14.RELEASE'
     id 'java'
     id 'war'
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'kr.co.abc'
@@ -36,6 +43,10 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'javax.servlet:jstl'
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+
+    // querydsl
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
     /*JPA*/
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.3.2.RELEASE'
     // log4jdbc-log4j2-jdbc4.1
@@ -57,6 +68,28 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.22'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl { //이놈
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets { //이놈
+    main.java.srcDir querydslDir
+}
+
+configurations { // 이놈
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl { // 이놈
+    options.annotationProcessorPath = configurations.querydsl
 }
 
 tasks.named('test') {

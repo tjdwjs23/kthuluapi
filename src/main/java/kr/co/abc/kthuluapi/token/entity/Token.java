@@ -1,7 +1,5 @@
 package kr.co.abc.kthuluapi.token.entity;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.*;
 
 import lombok.AccessLevel;

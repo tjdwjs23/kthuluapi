@@ -1,4 +1,5 @@
 package kr.co.abc.kthuluapi.config;
+
 import javax.sql.DataSource;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -44,6 +44,9 @@ dependencies {
     implementation 'javax.servlet:jstl'
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 
+    // mustache
+    implementation('org.springframework.boot:spring-boot-starter-mustache')
+
     // querydsl
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
@@ -72,23 +75,23 @@ dependencies {
 
 def querydslDir = "$buildDir/generated/querydsl"
 
-querydsl { //이놈
+querydsl { //querydsl
     jpa = true
     querydslSourcesDir = querydslDir
 }
 
-sourceSets { //이놈
+sourceSets { //querydsl
     main.java.srcDir querydslDir
 }
 
-configurations { // 이놈
+configurations { // querydsl
     compileOnly {
         extendsFrom annotationProcessor
     }
     querydsl.extendsFrom compileClasspath
 }
 
-compileQuerydsl { // 이놈
+compileQuerydsl { // querydsl
     options.annotationProcessorPath = configurations.querydsl
 }
 

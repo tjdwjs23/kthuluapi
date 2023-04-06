@@ -1,28 +1,80 @@
 package kr.co.abc.kthuluapi.token;
 
-import java.util.List;
-
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import kr.co.abc.kthuluapi.token.entity.QToken;
 import kr.co.abc.kthuluapi.token.entity.Token;
-import kr.co.abc.kthuluapi.token.entity.TokenRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 
-@SpringBootTest
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = RANDOM_PORT)
+@ActiveProfiles("test")
 public class TokenTests {
 
     @Autowired
-    TokenRepository tokenRepository;
+    private JPAQueryFactory queryFactory;
+
+    @Autowired
+    private TestRestTemplate restTemplate;
 
     @Test
-    void findAll() {
+    public void 메인페이지_로딩() {
+        // when
+        String body = this.restTemplate.getForObject("/", String.class);
 
-        // 1. 전체 게시글 수 조회
-        long tokensCount = tokenRepository.count();
+        //then
+        assertThat(body).contains("Here is Token Api!");
+    }
 
-        // 2. 전체 게시글 리스트 조회
-        List<Token> tokens = tokenRepository.findAll();
+    @Test
+    @DisplayName("token name 기준으로 equal/contains 조회")
+    void findToken() {
+        final String token_type = "ethreum";
+        final String token_name = "e";
+
+        // Q클래스를 이용한다.
+        QToken token = QToken.token;
+        List<Token> findToken = queryFactory
+                .selectFrom(token)
+                .where(
+                        token.token_type.eq(token_type)
+                                .andAnyOf(
+                                        token.token_name.contains(token_name)
+                                                .or(token.token_symbol.contains(token_name))
+                                                .or(token.token_contract.contains(token_name))
+                                )
+                )
+                .limit(150)
+                .fetch();
+
+    }
+
+    @Test
+    @DisplayName("token name 기준으로 equal 조회")
+    void findTokenContract() {
+        final String token_type = "ethreum";
+        final String token_name = "USDT";
+
+        // Q클래스를 이용한다.
+        QToken token = QToken.token;
+        List<Token> findTokenContract = queryFactory
+                .selectFrom(token)
+                .where(
+                        token.token_type.eq(token_type)
+                                .and(token.token_symbol.eq(token_name))
+                )
+                .fetch();
     }
 
 }

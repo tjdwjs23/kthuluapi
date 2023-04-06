@@ -7,10 +7,9 @@ server:
       force: true
 
 spring:
-  mvc:
-    view:
-      prefix: /WEB-INF/views/
-      suffix: .jsp
+  mustache:
+    servlet:
+      cache: false
   datasource:
     hikari:
       driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy

@@ -26,7 +26,6 @@ public class TokenService {
                                                 .or(token.token_contract.contains(token_name))
                                 )
                 )
-                .limit(150)
                 .fetch();
     }
 

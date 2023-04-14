@@ -22,10 +22,10 @@ public class Token {
     private String token_name; // 토큰 이름
     private String token_img; // 토큰 이미지
     private String token_symbol; // 토큰 심볼
-    private int token_decimals; // 토큰 데시말
+    private String token_decimals; // 토큰 데시말
 
     @Builder
-    public Token(String token_type, String token_contract, String token_name, String token_img, String token_symbol, int token_decimals) {
+    public Token(String token_type, String token_contract, String token_name, String token_img, String token_symbol, String token_decimals) {
         this.token_type = token_type;
         this.token_contract = token_contract;
         this.token_name = token_name;
